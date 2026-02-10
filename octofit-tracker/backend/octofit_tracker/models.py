@@ -30,5 +30,22 @@ class Workout(models.Model):
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     team = models.CharField(max_length=100, blank=True, null=True)
+
+    # Fix reverse accessor clashes by setting unique related_name
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='octofit_users',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        verbose_name='groups',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='octofit_users_permissions',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions',
+    )
+
     def __str__(self):
         return self.username
